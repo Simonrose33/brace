@@ -1,0 +1,12 @@
+Fonts used in this app
+
+Labrada (Labrada.ttf, Labrada-Italic.ttf)
+Copyright 2022 The Labrada Project Authors (https://github.com/Omnibus-Type/Labrada)
+Licensed under the SIL Open Font License, Version 1.1.
+
+Freckle Face (FreckleFace.ttf)
+Copyright (c) 2012 by Brian J. Bonislawsky DBA Astigmatic (AOETI) (astigma@astigmatic.com),
+with Reserved Font Name "Freckle Face".
+Licensed under the SIL Open Font License, Version 1.1.
+
+Full license text: https://openfontlicense.org/open-font-license-official-text/

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Rename: also change APP_NAME in config.js and the manifest -->
+  <title>Klin</title>
+  <meta name="description" content="A small, private place for the things you're grateful for.">
+  <meta name="theme-color" content="#F4ECE1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#2A1E19" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Klin">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap">
+  <link rel="preload" href="fonts/Labrada.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <!-- Day -->
+    <section class="view" id="view-day">
+      <nav class="toolbar">
+        <span class="brand" data-name></span>
+        <div class="toolbar-actions">
+          <button class="icon-btn" id="open-cal" data-label="calendar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="3"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/></svg>
+          </button>
+          <button class="icon-btn" id="open-settings" data-label="settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h9M18 7h1M5 17h3M12 17h7"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+          </button>
+        </div>
+      </nav>
+
+      <header class="day-head">
+        <div class="day-text">
+          <p class="eyebrow" id="day-eyebrow"></p>
+          <h1 class="title" id="day-title"></h1>
+          <div class="daynav">
+            <button class="icon-btn small" id="prev-day" data-label="prevDay">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="icon-btn small" id="next-day" data-label="nextDay">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg>
+            </button>
+            <button class="pill" id="go-today" data-text="backToToday" hidden></button>
+          </div>
+        </div>
+        <div class="art" id="day-art" aria-hidden="true"></div>
+      </header>
+
+      <ol class="lines" id="lines"></ol>
+
+      <button class="resume" id="drive-resume" data-text="driveResume" hidden></button>
+    </section>
+
+    <!-- Calendar -->
+    <section class="view" id="view-cal" hidden>
+      <div class="cal-header" id="cal-header">
+        <nav class="toolbar">
+          <button class="chip" id="cal-chip" aria-haspopup="true" aria-expanded="false" data-label="chooseMonth">
+            <span id="cal-chip-text"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+          </button>
+          <div class="toolbar-actions">
+            <button class="pill" id="cal-today" data-text="today"></button>
+            <button class="icon-btn" data-back data-label="close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
+            </button>
+          </div>
+        </nav>
+        <div class="cal-week" id="cal-week" aria-hidden="true"></div>
+
+        <div class="cal-picker" id="cal-picker" hidden>
+          <div class="picker-year">
+            <button class="icon-btn small" id="prev-year" data-label="prevYear">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>
+            </button>
+            <span id="picker-year"></span>
+            <button class="icon-btn small" id="next-year" data-label="nextYear">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="picker-months" id="picker-months"></div>
+        </div>
+      </div>
+
+      <div class="cal-months" id="cal-months"></div>
+    </section>
+
+    <!-- Settings -->
+    <section class="view" id="view-settings" hidden>
+      <nav class="toolbar">
+        <button class="icon-btn" data-back data-label="back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>
+        </button>
+        <span class="brand" data-text="settings"></span>
+        <span class="toolbar-spacer"></span>
+      </nav>
+
+      <div class="group">
+        <p class="label" data-text="thingsPerDay"></p>
+        <div class="seg" data-setting="count">
+          <button data-value="3">3</button>
+          <button data-value="5">5</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="label" data-text="language"></p>
+        <div class="seg" data-setting="lang">
+          <button data-value="en">English</button>
+          <button data-value="it">Italiano</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="label" data-text="look"></p>
+        <div class="seg" data-setting="theme">
+          <button data-value="auto" data-text="themeAuto"></button>
+          <button data-value="light" data-text="themeLight"></button>
+          <button data-value="dark" data-text="themeDark"></button>
+        </div>
+      </div>
+
+      <div class="group" id="drive-group">
+        <p class="label" data-text="backupTitle"></p>
+        <p class="note" data-text="driveDesc"></p>
+        <p class="status" id="drive-status"></p>
+        <div id="drive-setup">
+          <input class="field" id="drive-link" type="url" inputmode="url" autocomplete="off" spellcheck="false">
+          <div class="row">
+            <button class="btn" id="drive-connect"></button>
+          </div>
+        </div>
+        <div class="row" id="drive-linked">
+          <a class="btn ghost" id="drive-open" target="_blank" rel="noopener" data-text="driveOpen"></a>
+          <button class="btn" id="drive-resume-settings" data-text="driveResume"></button>
+          <button class="btn ghost" id="drive-disconnect" data-text="driveDisconnect"></button>
+        </div>
+        <p class="note small" id="drive-section-note" data-text="driveSectionNote"></p>
+      </div>
+
+      <div class="group">
+        <p class="label" data-text="fileTitle"></p>
+        <p class="note" data-text="fileDesc"></p>
+        <div class="row">
+          <button class="btn ghost" id="export" data-text="exportBtn"></button>
+          <label class="btn ghost">
+            <span data-text="importBtn"></span>
+            <input type="file" id="import" accept="application/json,.json" hidden>
+          </label>
+        </div>
+        <p class="status" id="file-status" role="status"></p>
+      </div>
+
+      <div class="group privacy">
+        <div class="privacy-head">
+          <p class="label" data-text="privacyTitle"></p>
+          <div class="privacy-art" id="privacy-art" aria-hidden="true"></div>
+        </div>
+        <div>
+          <p class="note" data-text="privacy"></p>
+          <p class="note" data-text="privacyDrive"></p>
+          <p class="note" data-text="privacyGift"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="config.js"></script>
+  <script src="i18n.js"></script>
+  <script src="shapes.js"></script>
+  <script src="drive.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

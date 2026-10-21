@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#F4ECE1"/>
+  <path fill="#D9C3A5" d="M102 350c-25 13-36 47-19 74 17 27 55 32 80 15 23-16 28-47 13-70-15-23-49-32-74-19z"/>
+  <path fill="#C8664A" d="M98 256c-7-79 57-134 146-139 44-2 70-16 112-10 56 8 76 62 70 132-8 82-60 148-156 152-84 4-160-44-172-135z"/>
+  <path fill="#9AA36F" d="M406 82c-20-2-36 12-36 30 0 19 16 32 34 31 19-1 32-16 30-34-2-15-13-26-28-27z"/>
+  <text x="262" y="296" text-anchor="middle" font-family="Freckle Face" font-size="112" fill="#FBF6EF">Klin</text>
+</svg>
