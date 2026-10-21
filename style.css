@@ -280,6 +280,26 @@ button { cursor: pointer; }
 }
 .resume[hidden] { display: none; }
 
+/* The day view fills the screen so her message can sit at the very bottom;
+   in a short window it stays just below the lines. */
+#view-day {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 32px);
+  min-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+#view-day[hidden] { display: none; }
+.love {
+  margin: auto 0 0;
+  padding: 24px 12px 4px;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-faint);
+}
+
 /* Calendar: months stacked vertically, header stays on top while scrolling. */
 .cal-header {
   position: sticky;

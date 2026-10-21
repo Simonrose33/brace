@@ -141,7 +141,8 @@
 
     $("#day-eyebrow").textContent = eyebrow;
     $("#day-title").textContent = fmt(d, { day: "numeric", month: "long", ...(sameYear ? {} : { year: "numeric" }) });
-    Shapes.mount($("#day-art"), k);
+    Shapes.show($("#day-art"), k);
+    renderMessage(k);
     $("#next-day").disabled = k >= today;
     $("#go-today").hidden = k === today;
 
@@ -170,6 +171,16 @@
     // Measure after layout settles, otherwise the first measurement can be at the wrong width.
     requestAnimationFrame(resizeAll);
     updateDayState();
+  }
+
+  // One message a day, in order: every message shows once before any repeats.
+  function renderMessage(k) {
+    const list = window.MESSAGES || [];
+    const el = $("#love");
+    if (!list.length) { el.textContent = ""; return; }
+    const day = Math.round(Date.UTC(...k.split("-").map((n, i) => (i === 1 ? n - 1 : +n))) / 86400000);
+    const words = { 3: "Tre", 5: "Cinque" };
+    el.textContent = list[((day % list.length) + list.length) % list.length].replace("{Count}", words[settings.count] || settings.count);
   }
 
   function autosize(ta) {
@@ -420,6 +431,7 @@
     saveSettings();
     if (key === "theme") applyTheme();
     if (key === "lang") applyTexts();
+    if (key === "count") renderMessage(state.date);
     renderSettings();
   }
 

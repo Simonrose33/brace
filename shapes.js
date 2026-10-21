@@ -2,7 +2,8 @@
 // Tapping them makes them wobble into a slightly different shape.
 window.Shapes = (() => {
   const SVG = "http://www.w3.org/2000/svg";
-  const DURATION = 900;
+  const DURATION = 900; // tap wobble
+  const MORPH = 650; // changing day
 
   function hash(str) {
     let h = 2166136261;
@@ -84,20 +85,89 @@ window.Shapes = (() => {
     });
     el.replaceChildren(svg);
     if (el._shapes) cancelAnimationFrame(el._shapes.frame);
-    el._shapes = { svg, blobs, rand: rng(hash(seed) ^ Date.now()), frame: 0 };
+    el._shapes = { svg, blobs, seed, rand: rng(hash(seed) ^ Date.now()), frame: 0 };
     if (!el._shapesBound) {
       el._shapesBound = true;
       el.addEventListener("click", () => poke(el));
     }
   }
 
+  // Shows the shapes for `seed`; if others are already there, they turn into the new ones.
+  function show(el, seed) {
+    const st = el._shapes;
+    if (!st) return mount(el, seed);
+    if (st.seed === seed) return;
+    const next = layout(rng(hash(seed)));
+    const tweens = st.blobs.map((b, i) => polarTween(b.pts, b.spec, next[i].pts, next[i]));
+    st.blobs.forEach((b, i) => {
+      b.spec = next[i];
+      b.path.setAttribute("class", next[i].cls);
+    });
+    st.seed = seed;
+    st.rand = rng(hash(seed) ^ Date.now());
+    animate(st, (i, k) => tweens[i](k), MORPH, backOut, 45);
+  }
+
+  // Moves each point around its shape's centre (angle and distance) instead of in a
+  // straight line, matching every point with the nearest one of the new shape.
+  // A straight line can pass through the centre and make a shape vanish for a moment.
+  function polarTween(fromPts, fromSpec, toPts, toSpec) {
+    const polar = (pts, c) => pts.map(([x, y]) => [Math.atan2(y - c.cy, x - c.cx), Math.hypot(x - c.cx, y - c.cy)]);
+    const a = polar(fromPts, fromSpec);
+    const b = polar(toPts, toSpec);
+    const n = b.length;
+    const wrap = (d) => Math.atan2(Math.sin(d), Math.cos(d)); // shortest turn, -π..π
+    let shift = 0, best = Infinity;
+    for (let s = 0; s < n; s++) {
+      let cost = 0;
+      for (let j = 0; j < n; j++) cost += wrap(b[(j + s) % n][0] - a[j][0]) ** 2;
+      if (cost < best) { best = cost; shift = s; }
+    }
+    const pairs = a.map((p, j) => {
+      const q = b[(j + shift) % n];
+      return { a0: p[0], da: wrap(q[0] - p[0]), r0: p[1], dr: q[1] - p[1] };
+    });
+    return (k) => {
+      const cx = fromSpec.cx + (toSpec.cx - fromSpec.cx) * k;
+      const cy = fromSpec.cy + (toSpec.cy - fromSpec.cy) * k;
+      return pairs.map(({ a0, da, r0, dr }) => {
+        const ang = a0 + da * k, r = Math.max(0, r0 + dr * k);
+        return [cx + Math.cos(ang) * r, cy + Math.sin(ang) * r];
+      });
+    };
+  }
+
   // Springy ease that overshoots a little and settles.
   const elastic = (t) => (t === 0 || t === 1 ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1);
+  // Smooth start, a small overshoot at the end.
+  const backOut = (t) => {
+    const c = 1.4;
+    const u = t - 1;
+    return 1 + (c + 1) * u * u * u + c * u * u;
+  };
+
+  // Runs `at(i, k)` (shape i's points at progress k) over time. The big shape leads and
+  // the small ones follow `lag` ms later, so they move like a little group.
+  function animate(st, at, duration, ease, lag) {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    cancelAnimationFrame(st.frame);
+    const start = performance.now();
+    const total = duration + lag * 3;
+    const step = (now) => {
+      const elapsed = reduce ? total : now - start;
+      st.blobs.forEach((b, i) => {
+        const delay = i === 1 ? 0 : lag * (i + 1);
+        b.pts = at(i, ease(Math.max(0, Math.min(1, (elapsed - delay) / duration))));
+        b.path.setAttribute("d", pathOf(b.pts));
+      });
+      if (elapsed < total) st.frame = requestAnimationFrame(step);
+    };
+    st.frame = requestAnimationFrame(step);
+  }
 
   function poke(el) {
     const st = el._shapes;
     if (!st) return;
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const from = st.blobs.map((b) => b.pts.map((p) => p.slice()));
     const to = st.blobs.map(({ spec: s }) =>
       // Same place, never bigger: only the outline changes, so the spacing stays as it was.
@@ -107,22 +177,9 @@ window.Shapes = (() => {
     st.svg.classList.remove("poke");
     void st.svg.getBoundingClientRect(); // restart the squish
     st.svg.classList.add("poke");
-
-    cancelAnimationFrame(st.frame);
-    const start = performance.now();
-    const step = (now) => {
-      const t = reduce ? 1 : Math.min(1, (now - start) / DURATION);
-      const e = elastic(t);
-      st.blobs.forEach((b, i) => {
-        // Small shapes lag a bit behind the big one, so they move like a little group.
-        const k = i === 1 ? e : elastic(Math.max(0, Math.min(1, (now - start - 70 * (i + 1)) / DURATION)));
-        b.pts = from[i].map((p, j) => [p[0] + (to[i][j][0] - p[0]) * k, p[1] + (to[i][j][1] - p[1]) * k]);
-        b.path.setAttribute("d", pathOf(b.pts));
-      });
-      if (t < 1 || (!reduce && now - start < DURATION + 70 * 3)) st.frame = requestAnimationFrame(step);
-    };
-    st.frame = requestAnimationFrame(step);
+    const lerp = (i, k) => from[i].map((p, j) => [p[0] + (to[i][j][0] - p[0]) * k, p[1] + (to[i][j][1] - p[1]) * k]);
+    animate(st, lerp, DURATION, elastic, 70);
   }
 
-  return { art, mount, poke };
+  return { art, mount, show, poke };
 })();

@@ -1,7 +1,7 @@
 // Offline support. Bump VERSION when you publish changes.
-const VERSION = "gj-v23";
+const VERSION = "gj-v27";
 const SHELL = [
-  "./", "index.html", "style.css", "config.js", "i18n.js", "shapes.js", "drive.js", "app.js",
+  "./", "index.html", "style.css", "config.js", "i18n.js", "messages.js", "shapes.js", "drive.js", "app.js",
   "manifest.webmanifest", "icons/favicon-32.png", "icons/apple-touch-icon.png", "icons/icon-192.png", "icons/icon-512.png",
   "fonts/Labrada.ttf", "fonts/Labrada-Italic.ttf", "fonts/FreckleFace.ttf",
 ];
