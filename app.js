@@ -22,7 +22,7 @@
     },
   };
 
-  const DEFAULTS = { count: 5, lang: "en", theme: "auto" };
+  const DEFAULTS = { count: 5, lang: "en", theme: "auto", palette: "terra" };
   const settings = { ...DEFAULTS, ...store.get("settings", {}) };
   let entries = store.get("entries", {});
 
@@ -101,7 +101,12 @@
     else root.setAttribute("data-theme", settings.theme);
     const dark = settings.theme === "dark" ||
       (settings.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
-    $$('meta[name="theme-color"]').forEach((m) => m.setAttribute("content", dark ? "#2A1E19" : "#F4ECE1"));
+    if (settings.palette === "ember") root.setAttribute("data-palette", "ember");
+    else root.removeAttribute("data-palette");
+    const bars = settings.palette === "ember"
+      ? { dark: "#161213", light: "#E9E5E2" }
+      : { dark: "#2A1E19", light: "#F4ECE1" };
+    $$('meta[name="theme-color"]').forEach((m) => m.setAttribute("content", dark ? bars.dark : bars.light));
   }
 
   function applyTexts() {
@@ -429,7 +434,7 @@
     const key = b.closest(".seg").dataset.setting;
     settings[key] = key === "count" ? Number(b.dataset.value) : b.dataset.value;
     saveSettings();
-    if (key === "theme") applyTheme();
+    if (key === "theme" || key === "palette") applyTheme();
     if (key === "lang") applyTexts();
     if (key === "count") renderMessage(state.date);
     renderSettings();

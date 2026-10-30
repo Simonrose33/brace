@@ -77,6 +77,57 @@
   color-scheme: dark;
 }
 
+/* Ember palette: ash greys, charcoal and glowing reds. Opt-in via data-palette. */
+:root[data-palette="ember"] {
+  --bg: #E9E5E2;
+  --surface: #F4F1EF;
+  --ink: #231E1D;
+  --ink-soft: #675E5A;
+  --ink-faint: #A39A95;
+  --terra: #B8361F;
+  --terra-soft: #D98C7C;
+  --brand: #C2432B;
+  --sand: #BDB5AF;
+  --olive: #C9792B;
+  --blush: #D3ADA4;
+  --line: rgba(35, 30, 29, 0.13);
+  --focus: rgba(184, 54, 31, 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="ember"]:not([data-theme="light"]) {
+    --bg: #161213;
+    --surface: #211B1B;
+    --ink: #EDE5E0;
+    --ink-soft: #B0A59F;
+    --ink-faint: #6F6561;
+    --terra: #E5482E;
+    --terra-soft: #8F3A2C;
+    --brand: #C23B25;
+    --sand: #4A4240;
+    --olive: #D9822B;
+    --blush: #6E3A32;
+    --line: rgba(237, 229, 224, 0.12);
+    --focus: rgba(229, 72, 46, 0.4);
+  }
+}
+
+:root[data-palette="ember"][data-theme="dark"] {
+  --bg: #161213;
+  --surface: #211B1B;
+  --ink: #EDE5E0;
+  --ink-soft: #B0A59F;
+  --ink-faint: #6F6561;
+  --terra: #E5482E;
+  --terra-soft: #8F3A2C;
+  --brand: #C23B25;
+  --sand: #4A4240;
+  --olive: #D9822B;
+  --blush: #6E3A32;
+  --line: rgba(237, 229, 224, 0.12);
+  --focus: rgba(229, 72, 46, 0.4);
+}
+
 * { box-sizing: border-box; }
 
 html, body { margin: 0; }

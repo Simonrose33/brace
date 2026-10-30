@@ -26,6 +26,9 @@ window.I18N = {
     themeAuto: "Auto",
     themeLight: "Light",
     themeDark: "Dark",
+    palette: "Colours",
+    paletteTerra: "Terracotta",
+    paletteEmber: "Ember",
 
     backupTitle: "Google Doc",
     driveDesc: "Use a Google Doc in your own Drive as the shared place for your days: one you already write in, or a new one. Your phone and computer both read and write there. {name} can only see that doc, nothing else.",
@@ -89,6 +92,9 @@ window.I18N = {
     themeAuto: "Auto",
     themeLight: "Chiaro",
     themeDark: "Scuro",
+    palette: "Colori",
+    paletteTerra: "Terracotta",
+    paletteEmber: "Braciere",
 
     backupTitle: "Google Doc",
     driveDesc: "Usa un Google Doc nel tuo Drive come posto comune per i tuoi giorni: uno in cui scrivi già, o uno nuovo. Telefono e computer leggono e scrivono lì. {name} può vedere solo quel documento, nient'altro.",

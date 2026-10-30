@@ -2,7 +2,7 @@
 // If you change APP_NAME, also update "name"/"short_name" in manifest.webmanifest
 // and the <title> in index.html (see README).
 window.APP_CONFIG = {
-  APP_NAME: "Klin",
+  APP_NAME: "Brace",
 
   // Name of the Google Doc created in his Drive for the automatic backup.
   // Only used when the doc is first created; afterwards it is found by its id.
